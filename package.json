@@ -1,6 +1,6 @@
 {
   "name": "pre-commit-xkeshi",
-  "version": "0.1.5",
+  "version": "0.2.2",
   "description": "git hooks",
   "main": "index.js",
   "scripts": {
@@ -8,10 +8,6 @@
   },
   "author": "wj",
   "license": "MIT",
-  "dependencies": {
-    "cross-spawn": "2.0.x",
-    "which": "1.2.x"
-  },
    "repository": {
     "type": "git",
     "url": "git://github.com/sydeEvans/pre-commit-xkeshi.git"
@@ -19,7 +15,6 @@
   "scripts": {
     "example-fail": "echo \"This is the example hook, I exit with 1\" && exit 1",
     "example-pass": "echo \"This is the example hook, I exit with 0\" && exit 0",
-    "install": "node install.js",
-    "uninstall": "node uninstall.js"
+    "install": "node install.js"
   }
 }

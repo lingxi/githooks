@@ -23,4 +23,10 @@ if (!exists(git) || !fs.lstatSync(git).isDirectory())
 if (!exists(hooks))
   fs.mkdirSync(hooks);
 
-fs.createReadStream(hook).pipe(fs.createWriteStream(precommit))
+let f =fs.createWriteStream(precommit)
+fs.createReadStream(hook).pipe(f)
+
+f.on('close',()=>{
+  console.log(f)
+  fs.chmodSync(precommit, '777');
+})

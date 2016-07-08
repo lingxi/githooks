@@ -6,8 +6,8 @@ echo "$files"
 
 
 # 若没有相关文件 直接退出
-if [ "$files" = "" ]; then 
-    exit 0 
+if [ "$files" = "" ]; then
+  exit 0
 fi
 
 pass=true
@@ -27,7 +27,7 @@ for file in ${files}; do
         pass=false
     fi
     echo "------------------------------------------------------"
-done
+done;
 
 echo "JavaScript validation complete:"
 
