@@ -1,6 +1,6 @@
 {
   "name": "pre-commit-xkeshi",
-  "version": "0.2.2",
+  "version": "0.2.4",
   "description": "git hooks",
   "main": "index.js",
   "scripts": {

@@ -1,14 +1,17 @@
 #!/bin/sh
 
-files=$(git diff --cached --name-only --diff-filter=ACM | grep "\.js$\|\.vue$")
+jsfiles=$(git diff --cached --name-only --diff-filter=ACM  | grep "\.js$")
+vuefiles=$(git diff --cached --name-only --diff-filter=ACM  | grep "\.vue$")
 
-echo "$files"
+echo "$jsfiles"
+echo "$vuefiles"
 
 
 # 若没有相关文件 直接退出
-if [ "$files" = "" ]; then
+if [ "$jsfiles" = "" &&  "$vuefiles" = ""]; then
   exit 0
 fi
+
 
 pass=true
 
@@ -16,18 +19,32 @@ echo "Validating JavaScript:"
 
 ESLINT="$(git rev-parse --show-toplevel)/node_modules/.bin/eslint"
 
-for file in ${files}; do
+for file in ${jsfiles}; do
     echo "------------------------------------------------------"
     result=$(${ESLINT} ${file} | grep "error")
     echo "$result"
     if [ "$result" == "" ]; then
-        echo "eSLint Passed: ${file}"
+        echo "ESLint Passed: ${file}"
     else
-        echo "eSLint Failed: ${file}"
+        echo "ESLint Failed: ${file}"
         pass=false
     fi
     echo "------------------------------------------------------"
 done;
+
+for file in ${vuefiles}; do
+    echo "------------------------------------------------------"
+    result=$(${ESLINT} ${file} | grep "error")
+    echo "$result"
+    if [ "$result" == "" ]; then
+        echo "ESLint Passed: ${file}"
+    else
+        echo "ESLint Failed: ${file}"
+        pass=false
+    fi
+    echo "------------------------------------------------------"
+done;
+
 
 echo "JavaScript validation complete:"
 

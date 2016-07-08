@@ -1,18 +1,19 @@
-# pre-commit 0.1.5
-
-特性：为公司定制
+# pre-commit-xkeshi
 
     #!/bin/sh
 
-    files=$(git diff --cached --name-only --diff-filter=ACM | grep "\.js$\|\.vue$")
+    jsfiles=$(git diff --cached --name-only --diff-filter=ACM  | grep "\.js$")
+    vuefiles=$(git diff --cached --name-only --diff-filter=ACM  | grep "\.vue$")
 
-    echo "$files"
+    echo "$jsfiles"
+    echo "$vuefiles"
 
 
     # 若没有相关文件 直接退出
-    if [ "$files" = "" ]; then 
-        exit 0 
+    if [ "$jsfiles" = "" &&  "$vuefiles" = ""]; then
+    exit 0
     fi
+
 
     pass=true
 
@@ -20,18 +21,32 @@
 
     ESLINT="$(git rev-parse --show-toplevel)/node_modules/.bin/eslint"
 
-    for file in ${files}; do
+    for file in ${jsfiles}; do
         echo "------------------------------------------------------"
         result=$(${ESLINT} ${file} | grep "error")
         echo "$result"
         if [ "$result" == "" ]; then
-            echo "eSLint Passed: ${file}"
+            echo "ESLint Passed: ${file}"
         else
-            echo "eSLint Failed: ${file}"
+            echo "ESLint Failed: ${file}"
             pass=false
         fi
         echo "------------------------------------------------------"
-    done
+    done;
+
+    for file in ${vuefiles}; do
+        echo "------------------------------------------------------"
+        result=$(${ESLINT} ${file} | grep "error")
+        echo "$result"
+        if [ "$result" == "" ]; then
+            echo "ESLint Passed: ${file}"
+        else
+            echo "ESLint Failed: ${file}"
+            pass=false
+        fi
+        echo "------------------------------------------------------"
+    done;
+
 
     echo "JavaScript validation complete:"
 
@@ -42,5 +57,12 @@
         echo "commit [success]"
     fi
 
-以上脚本获取所有需要提交的文件名中js,vue后缀的文件，并依次eslint
-依赖于local eslint已经安装
+project文件夹内的eslinthook文件内容
+包通过npm安装
+或者手动执行 `node install.js`
+可以将eslinthook插入到client的.git/hooks/pre-commit
+
+eslinthook会找到所有将要提交的文件
+并lint
+如果lint不通过，提交将不成功
+ 
