@@ -29,6 +29,7 @@ jsfileArr.forEach((file) => {
   file = path.join(rootPath, file); // 需要lint的文件的绝对路径
   let lint = exec(`${eslintPath} ${file}`)
   // console.log(lint);
+  if (lint.code === 0) return;
   if (lint.code != 1) {
     echo(`未知错误,咨询wj`);
     exit(1);
