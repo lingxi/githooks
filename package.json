@@ -1,20 +1,20 @@
 {
-  "name": "pre-commit-xkeshi",
+  "name": "@xkeshi/pre-commit",
   "version": "0.2.6",
   "description": "git hooks",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "wj",
-  "license": "MIT",
-   "repository": {
-    "type": "git",
-    "url": "git://github.com/sydeEvans/pre-commit-xkeshi.git"
-  },
-  "scripts": {
     "example-fail": "echo \"This is the example hook, I exit with 1\" && exit 1",
     "example-pass": "echo \"This is the example hook, I exit with 0\" && exit 0",
     "install": "node install.js"
+  },
+  "author": "wj",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sydeEvans/pre-commit-xkeshi.git"
+  },
+  "dependencies": {
+    "shelljs": "^0.7.3"
   }
 }

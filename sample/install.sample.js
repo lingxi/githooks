@@ -18,7 +18,7 @@ var fs = require('fs')
 //
 var git = path.resolve(root, '.git')
   , hooks = path.resolve(git, 'hooks')
-  , precommit = path.resolve(hooks, 'pre-commit');
+  , precommit = path.resolve(hooks, 'pre-commit')
 
 //
 // Bail out if we don't have an `.git` directory as the hooks will not get
