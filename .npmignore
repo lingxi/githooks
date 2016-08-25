@@ -3,4 +3,5 @@ npm-debug.log
 coverage
 .tern-port
 .vscode
-.sample
+sample
+.npmrc

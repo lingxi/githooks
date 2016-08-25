@@ -2,7 +2,7 @@
 
 
 BINARY="$NODEJS"
-
+export PATH="$NODEJSPATH":$PATH
 #
 # Add --dry-run cli flag support so we can execute this hook without side affects
 # and see if it works in the current environment

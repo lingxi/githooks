@@ -1,23 +1,17 @@
-'use strict';
+'use strict'
 
-var fs = require('fs')
-  , path = require('path')
-  , exists = fs.existsSync || path.existsSync
-  , precommit = path.resolve(__dirname, '../..', '.git', 'hooks', 'pre-commit');
+require('shelljs/global');
+const fs = require('fs');
+const path = require('path');
 
-//
-// Bail out if we don't have pre-commit file, it might be removed manually.
-//
-if (!exists(precommit)) return;
+let exists = fs.existsSync || path.existsSync;
 
-//
-// If we don't have an old file, we should just remove the pre-commit hook. But
-// if we do have an old precommit file we want to restore that.
-//
-if (!exists(precommit +'.old')) {
-  fs.unlinkSync(precommit);
-} else {
-  fs.writeFileSync(precommit, fs.readFileSync(precommit +'.old'));
-  fs.chmodSync(precommit, '755');
-  fs.unlinkSync(precommit +'.old');
-}
+let hook = path.resolve(__dirname, 'eslinthook');
+let root = exec('git rev-parse --show-toplevel').stdout.replace('\n', '');
+let git = path.resolve(root, '.git'),
+  hooks = path.resolve(git, 'hooks'),
+  precommit = path.resolve(hooks, 'pre-commit');
+
+
+rm('-rf',precommit);
+echo(' uninstall eslinthook success!')
