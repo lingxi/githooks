@@ -1,6 +1,6 @@
 {
   "name": "eslint-githook",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "eslint you js file",
   "main": "index.js",
   "scripts": {
