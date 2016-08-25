@@ -23,10 +23,12 @@ if (!exists(git) || !fs.lstatSync(git).isDirectory())
 if (!exists(hooks))
   fs.mkdirSync(hooks);
 
-let f =fs.createWriteStream(precommit)
-fs.createReadStream(hook).pipe(f)
+// let f =fs.createWriteStream(precommit)
+// fs.createReadStream(hook).pipe(f)
+let hookFile = fs.readFile(hook).toString();
+hookFile = hookFile.replace('$NODEJS',process.execPath);
+fs.writeFile(precommit,hookFile);
 
-f.on('close',()=>{
-  console.log(f)
-  fs.chmodSync(precommit, '777');
-})
+
+fs.chmodSync(precommit, '777');
+console.log('pre-commit installed')
