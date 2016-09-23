@@ -19,7 +19,7 @@ if (root.code === 0) {
   exit(1);
 }
 
-let jsfiles = exec('git diff --cached --name-only --diff-filter=ACM').grep(/\.js|vue$/).stdout;
+let jsfiles = exec('git diff --cached --name-only --diff-filter=ACM').grep(/\.js$|vue$/).stdout;
 // let jsfiles = exec('git diff --name-only').stdout;
 let jsfileArr = jsfiles.split('\n');
 let pass = true;
