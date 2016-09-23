@@ -11,5 +11,10 @@ mac与sourceTree混合使用,并且nodejs是采用pkg方式安装在 /usr/local/
 需要在提交时进行 提交文件lint
 
 
+# fix bug
+grep正则问题，导致抓取了ejs文件
+
+'\.js$|\.vue$' ->  /\.js|vue$/
+
 
 
