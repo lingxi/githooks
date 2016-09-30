@@ -11,7 +11,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/sydeEvans/pre-commit-xkeshi.git"
+    "url": "git://github.com/sydeEvans/githooks.git"
   },
   "dependencies": {
     "shelljs": "^0.7.3",
