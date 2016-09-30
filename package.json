@@ -1,6 +1,6 @@
 {
-  "name": "eslint-githook",
-  "version": "1.0.2",
+  "name": "githooks",
+  "version": "1.0.0",
   "description": "eslint you js file",
   "main": "index.js",
   "scripts": {
@@ -15,5 +15,8 @@
   },
   "dependencies": {
     "shelljs": "^0.7.3"
+  },
+  "devDependencies": {
+    "@types/node": "^6.0.41"
   }
 }
