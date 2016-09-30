@@ -30,7 +30,7 @@ tasks.forEach((value, index) => {
   let hookFile = fs.readFileSync(hook).toString();
   hookFile = hookFile.replace('$NODEJS', process.execPath);
   hookFile = hookFile.replace('$NODEJSPATH', path.resolve(process.execPath, '../'))
-  hookFile = hookFile.replace('$TASK', `${pkgName}/scripts/${value}.js`)
+  hookFile = hookFile.replace('$TASK', `${pkgName}/script/${value}.js`)
   fs.writeFileSync(task, hookFile);
 
   fs.chmodSync(task, '777');

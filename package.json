@@ -1,7 +1,7 @@
 {
-  "name": "githooks",
+  "name": "@xkeshi/githooks",
   "version": "1.0.0",
-  "description": "eslint you js file",
+  "description": "git 钩子",
   "main": "index.js",
   "scripts": {
     "install": "node install.js",
@@ -11,10 +11,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/sydeEvans/pre-commit-xkeshi.git"
+    "url": "git://github.com/sydeEvans/githooks.git"
   },
   "dependencies": {
-    "shelljs": "^0.7.3"
+    "shelljs": "^0.7.3",
+    "conventional-commit-types": "^2.0.0",
+    "semver-regex": "1.0.0"
   },
   "devDependencies": {
     "@types/node": "^6.0.41"
