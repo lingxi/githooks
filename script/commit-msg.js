@@ -15,7 +15,7 @@ var fs = require('fs');
 var conventionalCommitTypes = require('conventional-commit-types');
 var util = require('util');
 var resolve = require('path').resolve;
-var findup = require('findup');
+require('shelljs/global');
 var semverRegex = require('semver-regex')
 
 var config = getConfig();
@@ -25,15 +25,59 @@ var IGNORED = new RegExp(util.format('(^WIP)|(^%s$)', semverRegex().source));
 // fixup! and squash! are part of Git, commits tagged with them are not intended to be merged, cf. https://git-scm.com/docs/git-commit
 var PATTERN = /^((fixup! |squash! )?(\w+)(?:\(([^\)\s]+)\))?: (.+))(?:\n|$)/;
 var MERGE_COMMIT_PATTERN = /^Merge /;
-var error = function() {
+var error = function () {
   // gitx does not display it
   // http://gitx.lighthouseapp.com/projects/17830/tickets/294-feature-display-hook-error-message-when-hook-fails
   // https://groups.google.com/group/gitx/browse_thread/thread/a03bcab60844b812
-  console[config.warnOnFail ? 'warn' : 'error']('INVALID COMMIT MSG: ' + util.format.apply(null, arguments));
+  console[config.warnOnFail ? 'warn' : 'error']('COMMIT-MSG格式错误: ' + util.format.apply(null, arguments));
+  console[config.warnOnFail ? 'warn' : 'error'](`
+提交格式：
+<type>(<scope>): <subject>
+// 空一行
+<body>
+
+范例:
+  fix: feat(0429留言下单): add 'graphiteWidth' option
+
+  巴拉巴拉说明具体情况
+
+-------------------------------------------------------------------
+
+说明：
+type（必需）、scope（可选）和subject（必需）。
+<body>(可选)
+(1) type
+      type用于说明 commit 的类别，只允许使用下面7个标识。
+        feat：新功能（feature）
+        fix：修补bug
+        docs：文档（documentation）
+        style： 格式（不影响代码运行的变动）
+        refactor：重构（即不是新增功能，也不是修改bug的代码变动）
+        test：增加测试
+        chore：构建过程或辅助工具的变动
+        revert: feat(pencil): add 'graphiteWidth' option (撤销之前的commit)
+(2)scope
+    scope用于说明 commit 影响的范围，比如数据层、控制层、视图层等等，视项目不同而不同。
+(3)subject
+    subject是 commit 目的的简短描述，不超过50个字符。
+    以动词开头，使用第一人称现在时，比如change，而不是changed或changes
+    第一个字母小写
+    结尾不加句号（.）
+
+(4)Body 部分是对本次 commit 的详细描述，可以分成多行。下面是一个范例。
+
+More detailed explanatory text, if necessary.  Wrap it to 
+about 72 characters or so. 
+
+Further paragraphs come after blank lines.
+
+- Bullet points are okay, too
+- Use a hanging indent
+  `)
 };
 
 
-var validateMessage = function(raw) {
+var validateMessage = function (raw) {
   var types = config.types = config.types || conventionalCommitTypes;
 
   // resolve types from a module
@@ -54,7 +98,7 @@ var validateMessage = function(raw) {
 
   var isValid = true;
 
-  if(MERGE_COMMIT_PATTERN.test(message)){
+  if (MERGE_COMMIT_PATTERN.test(message)) {
     console.log('Merge commit detected.');
     return true
   }
@@ -143,11 +187,11 @@ if (process.argv.join('').indexOf('mocha') === -1) {
     return x && typeof x.toString === 'function';
   };
 
-  fs.readFile(commitMsgFile, function(err, buffer) {
+  fs.readFile(commitMsgFile, function (err, buffer) {
     var msg = getCommitMessage(buffer);
 
     if (!validateMessage(msg)) {
-      fs.appendFile(incorrectLogFile, msg + '\n', function() {
+      fs.appendFile(incorrectLogFile, msg + '\n', function () {
         process.exit(1);
       });
     } else {
@@ -160,22 +204,33 @@ if (process.argv.join('').indexOf('mocha') === -1) {
   });
 }
 
+
+
+
 function getConfig() {
-  var pkgFile = findup.sync(process.cwd(), 'package.json');
-  var pkg = JSON.parse(fs.readFileSync(resolve(pkgFile, 'package.json')));
-  return pkg && pkg.config && pkg.config['validate-commit-msg'] || {};
+  var defaultConfig = {
+    "types": ["feat", "fix", "docs", "style", "refactor", "perf", "test", "chore", "revert"], // default
+    "warnOnFail": false, // default
+    "maxSubjectLength": 100, // default
+    "subjectPattern": ".+", // default
+    "subjectPatternErrorMsg": 'subject does not match subject pattern!', // default
+    "helpMessage": "" //default
+  }
+  let root = exec('git rev-parse --show-toplevel').stdout.replace('\n', '')
+  let pkg = require(resolve(root, 'package.json'))
+  var config = pkg && pkg.config && pkg.config['validate-commit-msg']
+  return Object.assign(defaultConfig, config || {});
 }
 
-function getGitFolder()
-{
+function getGitFolder() {
   var gitDirLocation = './.git';
   if (!fs.existsSync(gitDirLocation)) {
-      throw new Error('Cannot find file ' + gitDirLocation);
+    throw new Error('Cannot find file ' + gitDirLocation);
   }
 
-  if(!fs.lstatSync(gitDirLocation).isDirectory()) {
-     var unparsedText = '' + fs.readFileSync(gitDirLocation);
-     gitDirLocation = unparsedText.substring('gitdir: '.length).trim();
+  if (!fs.lstatSync(gitDirLocation).isDirectory()) {
+    var unparsedText = '' + fs.readFileSync(gitDirLocation);
+    gitDirLocation = unparsedText.substring('gitdir: '.length).trim();
   }
 
   if (!fs.existsSync(gitDirLocation)) {

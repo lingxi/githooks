@@ -1,4 +1,4 @@
-# eslint pre-commit
+# githook
 
 mac与sourceTree混合使用,并且nodejs是采用pkg方式安装在 /usr/local/bin/node 目录下
 有已知bug
@@ -18,3 +18,4 @@ grep正则问题，导致抓取了ejs文件
 
 
 
+[commit-msg](http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html)
