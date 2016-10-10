@@ -1,11 +1,13 @@
 {
   "name": "@xkeshi/githooks",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "git 钩子",
   "main": "index.js",
   "scripts": {
     "install": "node install.js",
-    "uninstall": "node uninstall.js"
+    "uninstall": "node uninstall.js",
+    "test": "mocha --recursive -w",
+    "lint": "node script/pre-commit"
   },
   "author": "wj",
   "license": "MIT",
@@ -14,11 +16,19 @@
     "url": "git://github.com/sydeEvans/githooks.git"
   },
   "dependencies": {
-    "shelljs": "^0.7.3",
     "conventional-commit-types": "^2.0.0",
-    "semver-regex": "1.0.0"
+    "globule": "^1.0.0",
+    "iconv-lite": "^0.4.13",
+    "semver-regex": "1.0.0",
+    "shelljs": "^0.7.3"
   },
   "devDependencies": {
-    "@types/node": "^6.0.41"
+    "@types/node": "^6.0.41",
+    "chai": "^3.5.0",
+    "eslint": "^3.7.1",
+    "eslint-config-standard": "^6.2.0",
+    "eslint-plugin-promise": "^3.0.0",
+    "eslint-plugin-standard": "^2.0.1",
+    "mocha": "^3.1.0"
   }
 }

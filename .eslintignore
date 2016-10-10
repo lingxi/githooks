@@ -1,0 +1,6 @@
+helper/**/*.js
+script
+util
+node_modules
+test/
+demo/index.js

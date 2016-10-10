@@ -1,51 +1,66 @@
-'use strict';
+'use strict'
 
-require('shelljs/global');
+require('shelljs/global')
+global.config.silent = true
+
+const errorExit = require('../helper/error_exit')
+const Lint = require('../helper/lint')
+const isMatch = require('../helper/is_match')
+const findIgnoreFiles = require('../helper/find_ignore_files')
+const readPkg = require('../helper/read_pkg')
 const path = require('path')
+const fs = require('fs')
+
+
 
 if (!which('git')) {
-  echo('Sorry, this script requires git');
-  exit(1);
+  errorExit('Sorry, this script requires git')
 }
-
 
 let root = exec('git rev-parse --show-toplevel')
-let rootPath, eslintPath;
+
+/**
+ * git 和 eslint 环境检测
+ */
+let rootPath, eslintPath
 if (root.code === 0) {
-  rootPath = root.stdout.replace('\n', '');
-  eslintPath = `${rootPath}/node_modules/.bin/eslint`
+  rootPath = root.stdout.replace('\n', '')
 } else {
-  echo('Error: no git res');
-  exit(1);
+  errorExit('no git res')
+}
+const PACKAGE = readPkg(rootPath)
+
+eslintPath = `${rootPath}/node_modules/.bin/eslint`
+
+try {
+  fs.statSync(eslintPath)
+} catch (e) {
+  errorExit('请安装并配置好eslint')
 }
 
-let jsfiles = exec('git diff --cached --name-only --diff-filter=ACM').grep(/\.js$|vue$/).stdout;
-// let jsfiles = exec('git diff --name-only').stdout;
-let jsfileArr = jsfiles.split('\n');
-let pass = true;
+/**
+ * 获取待lint的文件和被忽略的文件
+ * @type {any}
+ */
+let lintFiles = exec('git diff --cached --name-only --diff-filter=ACM')
+  .grep(/\.js$|vue$/).stdout
 
-jsfileArr.forEach((file) => {
-  if (file == '') return;
-  file = path.join(rootPath, file); // 需要lint的文件的绝对路径
-  let lint = exec(`${eslintPath} ${file}`)
-  // console.log(lint);
-  if (lint.code == 0) return;
-  if (lint.code != 1) {
-    echo(`未知错误,咨询wj`);
-    exit(1);
-  }
-  let error = lint.grep('error').stdout;
-  // console.log(`${eslintPath} ${file}`);
-  if (error) {
-    pass = false;
-  }
+let ignoreFiles = findIgnoreFiles(rootPath)
 
-})
+let lintFileList = lintFiles
+  .split('\n')
+  .filter(file=>file != '' && !isMatch(file,ignoreFiles))
 
+/**
+ * 从package.json内读取配置信息
+ */
+let pkg_mode = PACKAGE.config && PACKAGE.config.lint && PACKAGE.config.lint.mode
+let lint =new Lint(lintFileList, Lint.MODE_MAP[pkg_mode] || Lint.MODE_MAP.strict)
 
-if (pass) {
-  echo('eslint pass')
-} else {
-  echo('eslint failed')
-  exit(1);
+let pass = lint.exec()
+
+if (!pass) {
+  errorExit('you may not pass lint,error show above !!!!')
+}else {
+  echo('eslint pass !!')
 }
