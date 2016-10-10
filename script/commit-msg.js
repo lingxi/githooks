@@ -9,27 +9,27 @@
  * >> ln -s ../../validate-commit-msg.js .git/hooks/commit-msg
  */
 
-'use strict';
+'use strict'
 
-var fs = require('fs');
-var conventionalCommitTypes = require('conventional-commit-types');
-var util = require('util');
-var resolve = require('path').resolve;
-require('shelljs/global');
+var fs = require('fs')
+var conventionalCommitTypes = require('conventional-commit-types')
+var util = require('util')
+var resolve = require('path').resolve
+require('shelljs/global')
 var semverRegex = require('semver-regex')
 
-var config = getConfig();
-var MAX_LENGTH = config.maxSubjectLength || 100;
-var IGNORED = new RegExp(util.format('(^WIP)|(^%s$)', semverRegex().source));
+var config = getConfig()
+var MAX_LENGTH = config.maxSubjectLength || 100
+var IGNORED = new RegExp(util.format('(^WIP)|(^%s$)', semverRegex().source))
 
 // fixup! and squash! are part of Git, commits tagged with them are not intended to be merged, cf. https://git-scm.com/docs/git-commit
-var PATTERN = /^((fixup! |squash! )?(\w+)(?:\(([^\)\s]+)\))?: (.+))(?:\n|$)/;
-var MERGE_COMMIT_PATTERN = /^Merge /;
+var PATTERN = /^((fixup! |squash! )?(\w+)(?:\(([^\)\s]+)\))?: (.+))(?:\n|$)/
+var MERGE_COMMIT_PATTERN = /^Merge /
 var error = function () {
   // gitx does not display it
   // http://gitx.lighthouseapp.com/projects/17830/tickets/294-feature-display-hook-error-message-when-hook-fails
   // https://groups.google.com/group/gitx/browse_thread/thread/a03bcab60844b812
-  console[config.warnOnFail ? 'warn' : 'error']('COMMIT-MSG格式错误: ' + util.format.apply(null, arguments));
+  console[config.warnOnFail ? 'warn' : 'error']('COMMIT-MSG格式错误: ' + util.format.apply(null, arguments))
   console[config.warnOnFail ? 'warn' : 'error'](`
 提交格式：
 <type>(<scope>): <subject>
@@ -74,68 +74,67 @@ Further paragraphs come after blank lines.
 - Bullet points are okay, too
 - Use a hanging indent
   `)
-};
-
+}
 
 var validateMessage = function (raw) {
-  var types = config.types = config.types || conventionalCommitTypes;
+  var types = config.types = config.types || conventionalCommitTypes
 
   // resolve types from a module
   if (typeof types === 'string' && types !== '*') {
-    types = Object.keys(require(types).types);
+    types = Object.keys(require(types).types)
   }
 
   var messageWithBody = (raw || '').split('\n').filter(function (str) {
-    return str.indexOf('#') !== 0;
-  }).join('\n');
+    return str.indexOf('#') !== 0
+  }).join('\n')
 
-  var message = messageWithBody.split('\n').shift();
+  var message = messageWithBody.split('\n').shift()
 
   if (message === '') {
-    console.log('Aborting commit due to empty commit message.');
-    return false;
+    console.log('Aborting commit due to empty commit message.')
+    return false
   }
 
-  var isValid = true;
+  var isValid = true
 
   if (MERGE_COMMIT_PATTERN.test(message)) {
-    console.log('Merge commit detected.');
+    console.log('Merge commit detected.')
     return true
   }
 
   if (IGNORED.test(message)) {
-    console.log('Commit message validation ignored.');
-    return true;
+    console.log('Commit message validation ignored.')
+    return true
   }
 
-  var match = PATTERN.exec(message);
+  var match = PATTERN.exec(message)
 
   if (!match) {
-    error('does not match "<type>(<scope>): <subject>" !');
-    isValid = false;
+    error('does not match "<type>(<scope>): <subject>" !')
+    isValid = false
   } else {
-    var firstLine = match[1];
-    var squashing = !!match[2];
-    var type = match[3];
-    var scope = match[4];
-    var subject = match[5];
+    var firstLine = match[1]
+    var squashing = !!match[2]
+    var type = match[3]
+    // var scope = match[4]
+    var subject = match[5]
 
-    var SUBJECT_PATTERN = new RegExp(config.subjectPattern || '.+');
-    var SUBJECT_PATTERN_ERROR_MSG = config.subjectPatternErrorMsg || 'subject does not match subject pattern!';
+    var SUBJECT_PATTERN = new RegExp(config.subjectPattern || '.+')
+    var SUBJECT_PATTERN_ERROR_MSG = config.subjectPatternErrorMsg || 'subject does not match subject pattern!'
 
     if (firstLine.length > MAX_LENGTH && !squashing) {
-      error('is longer than %d characters !', MAX_LENGTH);
-      isValid = false;
+      error('is longer than %d characters !', MAX_LENGTH)
+      isValid = false
     }
 
     if (types !== '*' && types.indexOf(type) === -1) {
-      error('"%s" is not allowed type ! Valid types are: %s', type, types.join(', '));
-      isValid = false;
+      error('"%s" is not allowed type ! Valid types are: %s', type, types.join(', '))
+      isValid = false
     }
 
     if (!SUBJECT_PATTERN.exec(subject)) {
-      error(SUBJECT_PATTERN_ERROR_MSG);
-      isValid = false;
+      error(SUBJECT_PATTERN_ERROR_MSG)
+      isValid = false
     }
   }
 
@@ -149,93 +148,91 @@ var validateMessage = function (raw) {
   // - auto correct typos in type ?
   // - store incorrect messages, so that we can learn
 
-  isValid = isValid || config.warnOnFail;
+  isValid = isValid || config.warnOnFail
 
   if (isValid) { // exit early and skip messaging logics
-    return true;
+    return true
   }
 
-  var argInHelp = config.helpMessage && config.helpMessage.indexOf('%s') !== -1;
+  var argInHelp = config.helpMessage && config.helpMessage.indexOf('%s') !== -1
 
   if (argInHelp) {
-    console.log(config.helpMessage, messageWithBody);
+    console.log(config.helpMessage, messageWithBody)
   } else if (message) {
-    console.log(message);
+    console.log(message)
   }
 
   if (!argInHelp && config.helpMessage) {
-    console.log(config.helpMessage);
+    console.log(config.helpMessage)
   }
 
-  return false;
-};
-
+  return false
+}
 
 // publish for testing
-exports.validateMessage = validateMessage;
-exports.getGitFolder = getGitFolder;
-exports.config = config;
+exports.validateMessage = validateMessage
+exports.getGitFolder = getGitFolder
+exports.config = config
 
 // hacky start if not run by mocha :-D
 // istanbul ignore next
 if (process.argv.join('').indexOf('mocha') === -1) {
+  var commitMsgFile = process.argv[2] || getGitFolder() + '/COMMIT_EDITMSG'
+  var incorrectLogFile = commitMsgFile.replace('COMMIT_EDITMSG', 'logs/incorrect-commit-msgs')
 
-  var commitMsgFile = process.argv[2] || getGitFolder() + '/COMMIT_EDITMSG';
-  var incorrectLogFile = commitMsgFile.replace('COMMIT_EDITMSG', 'logs/incorrect-commit-msgs');
-
-  var hasToString = function hasToString(x) {
-    return x && typeof x.toString === 'function';
-  };
+  var hasToString = function hasToString (x) {
+    return x && typeof x.toString === 'function'
+  }
 
   fs.readFile(commitMsgFile, function (err, buffer) {
-    var msg = getCommitMessage(buffer);
+    var msg = getCommitMessage(buffer)
+    if (err) {
+      throw Error(err)
+    }
 
     if (!validateMessage(msg)) {
       fs.appendFile(incorrectLogFile, msg + '\n', function () {
-        process.exit(1);
-      });
+        process.exit(1)
+      })
     } else {
-      process.exit(0);
+      process.exit(0)
     }
 
-    function getCommitMessage(buffer) {
-      return hasToString(buffer) && buffer.toString();
+    function getCommitMessage (buffer) {
+      return hasToString(buffer) && buffer.toString()
     }
-  });
+  })
 }
 
-
-
-
-function getConfig() {
+function getConfig () {
   var defaultConfig = {
-    "types": ["feat", "fix", "docs", "style", "refactor", "perf", "test", "chore", "revert"], // default
-    "warnOnFail": false, // default
-    "maxSubjectLength": 100, // default
-    "subjectPattern": ".+", // default
-    "subjectPatternErrorMsg": 'subject does not match subject pattern!', // default
-    "helpMessage": "" //default
+    'types': ['feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'chore', 'revert'], // default
+    'warnOnFail': false, // default
+    'maxSubjectLength': 100, // default
+    'subjectPattern': '.+', // default
+    'subjectPatternErrorMsg': 'subject does not match subject pattern!', // default
+    'helpMessage': '' // default
   }
   let root = exec('git rev-parse --show-toplevel').stdout.replace('\n', '')
   let pkg = require(resolve(root, 'package.json'))
   var config = pkg && pkg.config && pkg.config['validate-commit-msg']
-  return Object.assign(defaultConfig, config || {});
+  return Object.assign(defaultConfig, config || {})
 }
 
-function getGitFolder() {
-  var gitDirLocation = './.git';
+function getGitFolder () {
+  var gitDirLocation = './.git'
   if (!fs.existsSync(gitDirLocation)) {
-    throw new Error('Cannot find file ' + gitDirLocation);
+    throw new Error('Cannot find file ' + gitDirLocation)
   }
 
   if (!fs.lstatSync(gitDirLocation).isDirectory()) {
-    var unparsedText = '' + fs.readFileSync(gitDirLocation);
-    gitDirLocation = unparsedText.substring('gitdir: '.length).trim();
+    var unparsedText = '' + fs.readFileSync(gitDirLocation)
+    gitDirLocation = unparsedText.substring('gitdir: '.length).trim()
   }
 
   if (!fs.existsSync(gitDirLocation)) {
-    throw new Error('Cannot find file ' + gitDirLocation);
+    throw new Error('Cannot find file ' + gitDirLocation)
   }
 
-  return gitDirLocation;
+  return gitDirLocation
 }

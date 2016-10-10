@@ -1,7 +1,6 @@
 'use strict'
 
-
-function isMatch(file, ignoreFiles) {
+function isMatch (file, ignoreFiles) {
   return !!~ignoreFiles.indexOf(file)
 }
 

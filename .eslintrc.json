@@ -5,6 +5,14 @@
     "promise"
   ],
   "rules": {
-    "semi": [1]
+    "semi": [
+      1
+    ]
+  },
+  "globals": {
+    "echo": true,
+    "exec": true,
+    "which": true,
+    "rm": true
   }
 }

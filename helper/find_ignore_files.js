@@ -3,12 +3,12 @@ const fs = require('fs')
 const path = require('path')
 const globule = require('globule')
 
-function ignoreParse(srcBase) {
+function ignoreParse (srcBase) {
   let ignore = fs.readFileSync(path.join(srcBase, '.eslintignore')).toString()
-  return ignore.split('\n').filter(v=>v !='').map(mapPattern)
+  return ignore.split('\n').filter(v => v !== '').map(mapPattern)
 }
 
-function mapPattern(pattern) {
+function mapPattern (pattern) {
   /**
    * TODO:匹配原则待优化
    */
@@ -23,7 +23,7 @@ function mapPattern(pattern) {
 
 let cacheFileList = []
 
-function findFiles(srcBase) {
+function findFiles (srcBase) {
   if (findFiles.cached) {
     return cacheFileList
   }
@@ -35,6 +35,5 @@ function findFiles(srcBase) {
 
   return files
 }
-
 
 module.exports = findFiles

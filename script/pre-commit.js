@@ -8,10 +8,7 @@ const Lint = require('../helper/lint')
 const isMatch = require('../helper/is_match')
 const findIgnoreFiles = require('../helper/find_ignore_files')
 const readPkg = require('../helper/read_pkg')
-const path = require('path')
 const fs = require('fs')
-
-
 
 if (!which('git')) {
   errorExit('Sorry, this script requires git')
@@ -49,18 +46,18 @@ let ignoreFiles = findIgnoreFiles(rootPath)
 
 let lintFileList = lintFiles
   .split('\n')
-  .filter(file=>file != '' && !isMatch(file,ignoreFiles))
+  .filter(file => file !== '' && !isMatch(file, ignoreFiles))
 
 /**
  * 从package.json内读取配置信息
  */
-let pkg_mode = PACKAGE.config && PACKAGE.config.lint && PACKAGE.config.lint.mode
-let lint =new Lint(lintFileList, Lint.MODE_MAP[pkg_mode] || Lint.MODE_MAP.strict)
+let pkgMode = PACKAGE.config && PACKAGE.config.lint && PACKAGE.config.lint.mode
+let lint = new Lint(lintFileList, Lint.MODE_MAP[pkgMode] || Lint.MODE_MAP.strict)
 
 let pass = lint.exec()
 
 if (!pass) {
   errorExit('you may not pass lint,error show above !!!!')
-}else {
+} else {
   echo('eslint pass !!')
 }

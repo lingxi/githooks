@@ -1,7 +1,7 @@
 'use strict'
 require('shelljs/global')
 
-function errorExit(msg) {
+function errorExit (msg) {
   echo('[Error]:' + msg)
   process.exit(1)
 }

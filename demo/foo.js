@@ -2,7 +2,7 @@
 
 class Foo {
   constructor () {
-    console.log('bar');
+    console.log('bar')
   }
 
   bar () {

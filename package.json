@@ -1,13 +1,14 @@
 {
   "name": "@xkeshi/githooks",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "git 钩子",
   "main": "index.js",
   "scripts": {
     "install": "node install.js",
     "uninstall": "node uninstall.js",
     "test": "mocha --recursive -w",
-    "lint": "node script/pre-commit"
+    "lint": "node script/pre-commit",
+    "lint-fix": "eslint ./**/*.js --fix"
   },
   "author": "wj",
   "license": "MIT",
