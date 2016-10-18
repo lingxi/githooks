@@ -1,6 +1,6 @@
 {
   "name": "@xkeshi/githooks",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "git 钩子",
   "main": "index.js",
   "scripts": {
