@@ -44,6 +44,8 @@ let lintFiles = exec('git diff --cached --name-only --diff-filter=ACM')
 
 let ignoreFiles = findIgnoreFiles(rootPath)
 
+ignoreFiles.push('.eslintrc.js')
+
 let lintFileList = lintFiles
   .split('\n')
   .filter(file => file !== '' && !isMatch(file, ignoreFiles))
