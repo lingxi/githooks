@@ -1,5 +1,5 @@
 {
-  "name": "@xkeshi/githooks",
+  "name": "eslint-githook",
   "version": "1.1.2",
   "description": "git 钩子",
   "main": "index.js",
