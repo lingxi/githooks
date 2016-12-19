@@ -14,9 +14,9 @@ describe('解析eslintignore ', ()=> {
   })
 
 
-  it('读取文件，解析成待匹配文件列表', ()=> {
-    expect(IgnoreFiles[0]).to.be.contain('helper')
-  })
+  // it('读取文件，解析成待匹配文件列表', ()=> {
+  //   expect(IgnoreFiles[0]).to.be.contain('helper')
+  // })
 
   it('IgnoreFiles 解析是否缓存', ()=> {
     console.time('the second time')
