@@ -47,7 +47,8 @@ var error = function () {
 type（必需）、scope（可选）和subject（必需）。
 <body>(可选)
 (1) type
-      type用于说明 commit 的类别，只允许使用下面7个标识。
+      type用于说明 commit 的类别，只允许使用下面8个标识。
+        br: 此项特别针对bug号，用于向测试反馈bug列表的bug修改情况
         feat：新功能（feature）
         fix：修补bug
         docs：文档（documentation）
@@ -206,7 +207,7 @@ if (process.argv.join('').indexOf('mocha') === -1) {
 
 function getConfig () {
   var defaultConfig = {
-    'types': ['feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'chore', 'revert'], // default
+    'types': ['feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'chore', 'revert', 'br'], // default
     'warnOnFail': false, // default
     'maxSubjectLength': 100, // default
     'subjectPattern': '.+', // default
