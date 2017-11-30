@@ -59,7 +59,7 @@ let lint = new Lint(lintFileList, Lint.MODE_MAP[pkgMode] || Lint.MODE_MAP.strict
 let pass = lint.exec()
 
 if (!pass) {
-  errorExit('you may not pass lint,error show above !!!!')
+  errorExit('you may not pass lint, error show above!')
 } else {
-  echo('eslint pass !!')
+  echo('eslint pass!')
 }
